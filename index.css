@@ -56,7 +56,11 @@
     margin-right: 5px;
 }
 
+<<<<<<< HEAD
 /* 検索フォーム内のText要素 */
+=======
+/* 検索フォーム内のtxt要素 */
+>>>>>>> ccd7dfec560eae2026893d13512667909d5fe95d
 .info-txt {
     grid-template-rows: 10px 10px 10px 10px; 
 }
