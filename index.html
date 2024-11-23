@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<!--あぷりのリンクとか-->
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="index.css" rel="stylesheet" type="text/css" media="all">
+    <title>ぶっくあぷり</title>
+</head>
+
+<!--あぷりの中身とか-->
+
+<body>
+    <header>
+        <div class="header-area">
+            <div class="header-txt">
+                <h2>Book Memo</h2>
+            </div>
+            <div class="User-operation">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="本の題名を入力...">
+                    <ul id="suggestionsList" class="suggestions-container"></ul>
+                    <button class="searchbookbtn" id="searchBtn">検索</button>
+                </div>
+                <button class="Addbookbtn" id="showModalBtn">新しい本を追加</button>
+            </div>
+        </div>
+    </header>
+    <div class="book-area">
+        <div id="searchBookModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal2">&times;</span>
+                <h3>検索した本の一覧</h3>
+                <ul id="searchResults" class="results-container"></ul>
+            </div>
+        </div>
+        <div id="addBookModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal1">&times;</span>
+                <h3>新しい本を追加</h3>
+                <input type="text" id="newTitle" placeholder="本の題名" />
+                <input type="text" id="newAuthor" placeholder="著者" />
+                <button class="addBookBtn" id="addBookBtn">本を追加なのだ</button>
+            </div>
+        </div>
+        <div class="Book-table">
+            <div class="title-area">
+                <div class="item-box">
+                    <div class="items1">
+                        <div class="item">No.</div>
+                    </div>
+                    <div class="items2">
+                        <div class="item">本の題名</div>
+                    </div>
+                    <div class="items2">
+                        <div class="item">著者</div>
+                    </div>
+                    <div class="items2">
+                        <div class="item">本を借りた日</div>
+                    </div>
+                    <div class="items2">
+                        <div class="item">本を返す日</div>
+                    </div>
+                </div>
+            </div>
+            <div class="contents-area" id="bookList">
+                <div class="list">
+                    <div class="item-box box0">
+                        <div class="items1">
+                            <div class="item">0</div>
+                        </div>
+                        <div class="items2">
+                            <div class="item">時給300円の死神</div>
+                        </div>
+                        <div class="items2">
+                            <div class="item">藤まる</div>
+                        </div>
+                        <div class="items2">
+                            <div class="item">yyyy/mm/dd(aaa)</div>
+                        </div>
+                        <div class="items2">
+                            <div class="item">yyyy/mm/dd(aaa)</div>
+                        </div>
+                    </div>
+                    <button class="item-btn">本を返す</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="index.js"></script>
+</body>
+
+</html>
