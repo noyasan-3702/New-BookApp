@@ -169,34 +169,62 @@ async function reflectionDeta(results) {
         if (results.length > 0) {
             const ul = document.createElement("ul"); // リスト要素を作成
             ul.className = "results-list";
-
             results.forEach((book) => {
                 const li = document.createElement("li");
                 li.className = "result-item";
 
-                // 在庫の状態をチェックして表示内容を決定
-                const isAvailable = book.BorrowBook_Flag === true || book.BorrowBook_Flag === false;
-                li.innerHTML = `
-                <div class="book-info">
-                    <div class="info-txt">
-                        <span class="info-item info-No">No.${book.no}</span>
-                        <span class="info-item info-title">${book.title}</span><br>
-                        <span class="info-item ${isAvailable ? "available" : "unavailable"}">
-                            ${isAvailable ? "在庫あり" : "在庫なし"}
-                        </span>
-                    </div>
-                    <div class="info-btn">
-                        <button class="borrow-button Borrowbookbtn" ${isAvailable ? "" : "disabled"}>本を借りる</button>
-                    </div>
-                </div>
-                `;
+                // 在庫の状態を取得する
+                let bookBorrowDeta = book.BorrowBook_Flag;
+                console.log(`${bookBorrowDeta}`);
 
-                ul.appendChild(li);
+                // 在庫の状態をチェックして表示内容を決定
+                // 誰にも本が借りられていない場合
+                if(bookBorrowDeta === true) { 
+                    li.innerHTML = `
+                    <div class="book-info">
+                        <div class="info-txt">
+                            <span class="info-item info-No">No.${book.no}</span>
+                            <span class="info-item info-title">${book.title}</span><br>
+                            <span class="info-item available">在庫あり</span>
+                        </div>
+                        <div class="info-btn">
+                            <button class="borrow-button Borrowbookbtn">
+                                本を借りる
+                            </button>
+                        </div>
+                    </div>
+                    `;
+                    ul.appendChild(li);
+                
+                    // 要素を追加
+                    resultsContainer.appendChild(ul);
+                    console.log(`${bookBorrowDeta}なので、在庫ありを表示`);
+                    setBorrowButtonEvents()
+
+                // 既に本が借りられている場合
+                } else if(bookBorrowDeta === false) { 
+                    li.innerHTML = `
+                    <div class="book-info">
+                        <div class="info-txt">
+                            <span class="info-item info-No">No.${book.no}</span>
+                            <span class="info-item info-title">${book.title}</span><br>
+                            <span class="info-item unavailable">在庫なし</span>
+                        </div>
+                        <div class="info-btn">
+                            <button class="borrow-button Borrowbookbtn disabled">
+                                本を借りる
+                            </button>
+                        </div>
+                    </div>
+                    `;
+                    ul.appendChild(li);
+                
+                    // 要素を追加
+                    resultsContainer.appendChild(ul);
+                    console.log(`${bookBorrowDeta}なので、在庫なしを表示`);
+                    setBorrowButtonEvents()
+                }
             });
-            resultsContainer.appendChild(ul);
-            
-            // ボタンにイベントを追加
-            setBorrowButtonEvents();
         } else {
             resultsContainer.innerHTML = "<p>該当する本は見つかりませんでした。</p>";
         }
@@ -278,13 +306,14 @@ function DaysLater(startDate, days) {
 }
 
 // Firebase内のデータを更新する関数
-async function updateDates(docId, newBorrowedDate, newReturnDate) {
+async function updateDates(docId,newBorrowBookflag,newBorrowedDate, newReturnDate) {
     try {
         // 更新対象のドキュメントを指定
         const docRef = doc(db, "booksArray", docId);
 
         // 更新内容を設定(ここでは『本を借りる日』と『本を返す日』を設定)
         await updateDoc(docRef, {
+            BorrowBook_Flag: newBorrowBookflag,
             borrowedDate: newBorrowedDate,
             returnDate: newReturnDate,
         });
@@ -315,10 +344,10 @@ async function getData(bookkey) {
             newItem.innerHTML = `
                 <div class="item-box box1">
                     <div class="items1">
-                        <div class="item">${bookData.no || "N/A"}</div>
+                        <div class="item BNo">${bookData.no || "N/A"}</div>
                     </div>
                     <div class="items2">
-                        <div class="item">${bookData.title || "タイトル不明"}</div>
+                        <div class="item BTitle">${bookData.title || "タイトル不明"}</div>
                     </div>
                     <div class="items2">
                         <div class="item">${bookData.author || "著者不明"}</div>
@@ -330,11 +359,14 @@ async function getData(bookkey) {
                         <div class="item">${bookData.returnDate || "未設定"}</div>
                     </div>
                 </div>
-                <button class="item-btn">本を返す</button>
+                <button class="item-btn Returnbookbtn">本を返す</button>
             `;
 
             // 作成した要素をHTMLに追加
             bookList.appendChild(newItem);
+
+            // ボタンにイベントを追加
+            setReturnButtonEvents();
         } else {
             console.log("指定されたドキュメントは存在しません！");
         }
@@ -355,7 +387,7 @@ function setBorrowButtonEvents() {
     const borrowButtons = document.querySelectorAll(".Borrowbookbtn");
     borrowButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            
+
             // 親要素 .book-info を取得して本の『No.』を更に取得
             const bookInfo = button.closest(".book-info");
             const bookkeyElement = bookInfo.querySelector(".info-No")
@@ -378,8 +410,11 @@ function setBorrowButtonEvents() {
             const newReturnDate = formatDate(DaysLater(today, 5)); // フォーマットに合わせて表示
             console.log(newReturnDate);
 
+            //　『本を借りたフラグ』をFlaseにする
+            const newBorrowBookflag = false
+
             // 更新処理を実行
-            updateDates(bookkey, newBorrowedDate, newReturnDate);
+            updateDates(bookkey, newBorrowBookflag, newBorrowedDate, newReturnDate);
 
             // 取得処理を実行
             getData(bookkey)
@@ -484,4 +519,66 @@ async function addNewBook() {
         console.error("ドキュメント追加中にエラーが発生しました:", error);
         alert("ドキュメント追加中にエラーが発生しました。もう一度試してください！");
     }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ====================== //
+//// 「本を返す」ボタン ////
+// ====================== //
+
+// 「本を返す」ボタンのイベント設定
+function setReturnButtonEvents() {
+
+    // 全ての「本を返す」ボタンを取得
+    const returnButtons = document.querySelectorAll(".Returnbookbtn");
+
+    // 各ボタンにクリックイベントを追加
+    returnButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            
+            // 親要素 .book-info を取得して本の『No.』を更に取得
+            const booklist = button.closest(".list");
+            const booklistElement = booklist.querySelector(".item-box")
+            const bookitemsElement1 = booklistElement.querySelector(".items1")
+            const bookNoElement = bookitemsElement1.querySelector(".BNo")
+            const bookkeytxt = bookNoElement.textContent
+
+            // 取得した文字列から『No.』を削除して、数値のみを取得して「No.」を削除した結果を表示
+            const bookNo = bookkeytxt.replace("No.", "").trim();
+            console.log(bookNo); 
+
+            // 本のkeyを取得して、結果を表示
+            const bookkey = `key${bookNo}`;
+            console.log(bookkey); 
+
+            // 本を借りた日を設定
+            const today = new Date();
+            const newBorrowedDate = ""; // 日付をリセット
+            console.log(newBorrowedDate);
+
+            // 本を返す日を設定
+            const newReturnDate = ""; // 日付をリセット
+            console.log(newReturnDate);
+
+            //　『本を借りたフラグ』をTrueにする
+            const newBorrowBookflag = true
+
+            // 更新処理を実行
+            updateDates(bookkey, newBorrowBookflag, newBorrowedDate, newReturnDate);
+
+            // ボタンの親要素である .list を削除
+            const listItem = this.closest(".list"); // 一番近い親要素を取得
+            if (listItem) {
+                listItem.remove();
+            }
+            
+            // 本のタイトルを取得して、アラートとログを表示する
+            const bookitemsElement2 = booklistElement.querySelector(".items2")
+            const booktitleElement = bookitemsElement2.querySelector(".BTitle")
+            const bookTitle = booktitleElement.textContent
+            console.log(`"${bookTitle}" を返しました！`)
+        });
+    });
 }
