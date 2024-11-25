@@ -1,4 +1,7 @@
 
+/*/ ========== //
+//// ヘッター ////
+// =========== //
 
 /* ヘッター部分のレイアウト */
 .header-area {
@@ -6,6 +9,12 @@
     background-color: #f0f0f0 ;
     border-bottom: 5px groove #f0f0f0 ;
 }
+
+/*///////////////////////////////////////////////////////////////*/
+
+/* =============== //
+//// 検索フォーム ////
+// =============== //
 
 /* 検索フォームの基本スタイル */
 .search-container {
@@ -44,7 +53,6 @@
 .suggestions li:hover {
     background-color: #f0f0f0;
 }
-
 
 /* 検索フォームのレイアウト */
 .book-info {
@@ -128,7 +136,11 @@
     cursor: not-allowed;
 }
 
+/*///////////////////////////////////////////////////////////////*/
 
+/* ======================== //
+//// モーダル(ポップアップ) ////
+// ======================== //
 
 /* モーダル全体の背景 */
 .modal {
@@ -178,59 +190,90 @@
     cursor: pointer;
 }
 
-/* Book-tableのレイアウト */
+/*///////////////////////////////////////////////////////////////*/
+
+/* ================== //
+//// 一覧のレイアウト ////
+// ================== //
+
+/* テーブル全体のスタイル */
 .Book-table {
     width: 100%;
-    height: 100vh;
+    border-collapse: collapse;
+    table-layout: fixed; /* 各セルの幅を固定 */
 }
 
-.title-area {
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: 50px;
+/* ========= //
+//// 項目名 ////
+// ========= //
+
+/* 画面幅が768px以下の場合に特定のクラスを非表示にする */
+@media (max-width: 768px) {
+    .item-Author, 
+    .item-AorrowedDay, 
+    .item-ReturnDay {
+        display: none;
+    }
 }
-.item {
-    padding-top: 15px;
-    padding-left: 10px;
+
+/* 項目名のスタイル */
+.Book-table thead th {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+.item-box {
+    background-color: #f8f9fa;
     letter-spacing: 0.15em;
 }
 
-.list-0 {
-    display: grid;
-    grid-template-columns: auto auto;
-    margin-top: 5px;
+/* 各カラムの幅設定 */
+.item-No {
+    width: 5%;
+}
+.item-Title {
+    text-align: left;
+    width: 25%; /* 本の題名は広め */
+    word-wrap: break-word; /* 折り返しを有効化 */
+    white-space: normal; /* 折り返し可能な状態にする */
+}
+.item-Author {
+    text-align: left;
+    width: 15%; /* 本の題名は広め */
+    word-wrap: break-word; /* 折り返しを有効化 */
+    white-space: normal; /* 折り返し可能な状態にする */
+}
+.item-AorrowedDay, .item-ReturnDay {
+    text-align: left;
+    width: 25%; /* 借りた日と返す日は中間の幅 */
+    word-wrap: break-word; /* 折り返しを有効化 */
+    white-space: normal; /* 折り返し可能な状態にする */
+}
+.item-btn {
+    width: 10%;
+}
+.Returnbookbtn {
+    width: 100%;
+    border-radius: 50px;
+    margin: 15px auto;
+    height: 50px;
+    letter-spacing: 0.15em;
 }
 
-.list {
-    display: grid;
-    grid-template-columns: 85% auto;
-    margin-top: 5px;
-}
+/* ======= //
+//// 一覧 ////
+// ======= //
 
-.item-box {
-    display: grid;
-    grid-template-columns: 50px 200px 150px 1fr 1fr;
-    grid-template-rows: 50px;
-}
-.box0 {
-    border-radius: 10px;
-    background-color: rgb(182, 182, 182);
+/* 一覧内のスタイル */
+.Book-table tbody th {
+    padding: 8px;
+    height: 80px;
+    border-bottom: 1px solid #ddd;
+    letter-spacing: 0.15em;
 }
 .box1 {
-    border-radius: 10px;
     background-color: darkseagreen;
 }
 
-.items1 {
-    text-align: center;
-}
-.item-btn {
-    margin: 15px auto;
-    width: 70%;
-    height: 30px;
-    border-radius: 50px;
-    letter-spacing: 0.15em;
-}
 
 
 

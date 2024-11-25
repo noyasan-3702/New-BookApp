@@ -46,48 +46,28 @@
                 <button class="addBookBtn" id="addBookBtn">本を追加</button>
             </div>
         </div>
-        <div class="Book-table">
-            <div class="title-area">
-                <div class="item-box">
-                    <div class="items1">
-                        <div class="item">No.</div>
-                    </div>
-                    <div class="items2">
-                        <div class="item">本の題名</div>
-                    </div>
-                    <div class="items2">
-                        <div class="item">著者</div>
-                    </div>
-                    <div class="items2">
-                        <div class="item">本を借りた日</div>
-                    </div>
-                    <div class="items2">
-                        <div class="item">本を返す日</div>
-                    </div>
-                </div>
-            </div>
-            <div class="contents-area" id="bookList">
-                <div class="list">
-                    <div class="item-box box0">
-                        <div class="items1">
-                            <div class="item">0</div>
-                        </div>
-                        <div class="items2">
-                            <div class="item">時給300円の死神</div>
-                        </div>
-                        <div class="items2">
-                            <div class="item">藤まる</div>
-                        </div>
-                        <div class="items2">
-                            <div class="item">yyyy/mm/dd(aaa)</div>
-                        </div>
-                        <div class="items2">
-                            <div class="item">yyyy/mm/dd(aaa)</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <table class="Book-table">
+            <thead>
+                <tr class="item-box box0">
+                    <th class="item-No">No.</th>
+                    <th class="item-Title">本の題名</th>
+                    <th class="item-Author">著者</th>
+                    <th class="item-AorrowedDay">本を借りた日</th>
+                    <th class="item-ReturnDay">本を返す日</th>
+                    <th class="item-btn"></th>
+                </tr>
+            </thead>
+            <tbody id="bookList">
+                <tr class="item-box box1">
+                    <th class="item-No">0</th>
+                    <th class="item-Title">時給300円の死神</th>
+                    <th class="item-Author">藤まる</th>
+                    <th class="item-AorrowedDay">yyyy/mm/dd(aaa)</th>
+                    <th class="item-ReturnDay">yyyy/mm/dd(aaa)</th>
+                    <th class="item-btn"></th>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <script type="module" src="index.js"></script>
 </body>

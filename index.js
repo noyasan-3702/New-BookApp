@@ -26,6 +26,7 @@ const app = initializeApp(firebaseConfig);
 
 // Firestoreを初期化
 const db = getFirestore(app);
+
 console.log("Firestoreの初期化が完了しました！");
 
 
@@ -339,42 +340,36 @@ async function getData(bookkey) {
             const bookData = docSnap.data();
             
             // 新しい要素の作成
-            const newItem = document.createElement("div");
-            newItem.className = "list";
+            const newItem = document.createElement("tr");
+            newItem.classList.add("item-box", "box1");
             newItem.innerHTML = `
-                <div class="item-box box1">
-                    <div class="items1">
-                        <div class="item BNo">${bookData.no || "N/A"}</div>
-                    </div>
-                    <div class="items2">
-                        <div class="item BTitle">${bookData.title || "タイトル不明"}</div>
-                    </div>
-                    <div class="items2">
-                        <div class="item">${bookData.author || "著者不明"}</div>
-                    </div>
-                    <div class="items2">
-                        <div class="item">${bookData.borrowedDate || "未設定"}</div>
-                    </div>
-                    <div class="items2">
-                        <div class="item">${bookData.returnDate || "未設定"}</div>
-                    </div>
-                </div>
-                <button class="item-btn Returnbookbtn">本を返す</button>
+                <th class="item-No BNo">${bookData.no || "N/A"}</th>
+                <th class="item-Title BTitle">${bookData.title || "タイトル不明"}</th>
+                <th class="item-Author">${bookData.author || "著者不明"}</th>
+                <th class="item-AorrowedDay">${bookData.borrowedDate || "未設定"}</th>
+                <th class="item-ReturnDay">${bookData.returnDate || "未設定"}</th>
+                <th class="item-btn">
+                    <button class="Returnbookbtn">本を返す</button>
+                </th>
             `;
-
             // 作成した要素をHTMLに追加
             bookList.appendChild(newItem);
 
             // ボタンにイベントを追加
-            setReturnButtonEvents();
+            const returnButton = newItem.querySelector(".Returnbookbtn");
+            if (returnButton) {
+                returnButton.addEventListener("click", () => {
+                    // ここに「本を返却する」ロジックを追加
+                    setReturnButtonEvents();
+                });
+            }
         } else {
-            console.log("指定されたドキュメントは存在しません！");
+            console.warn("指定されたドキュメントは存在しません。");
         }
     } catch (error) {
-        console.error("データ取得中にエラーが発生しました:", error);
+        console.error("データ取得中にエラーが発生しました:", error.message);
     }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -539,10 +534,8 @@ function setReturnButtonEvents() {
         button.addEventListener("click", function () {
             
             // 親要素 .book-info を取得して本の『No.』を更に取得
-            const booklist = button.closest(".list");
-            const booklistElement = booklist.querySelector(".item-box")
-            const bookitemsElement1 = booklistElement.querySelector(".items1")
-            const bookNoElement = bookitemsElement1.querySelector(".BNo")
+            const booklistbox = button.closest(".item-box");
+            const bookNoElement = booklistbox.querySelector(".BNo")
             const bookkeytxt = bookNoElement.textContent
 
             // 取得した文字列から『No.』を削除して、数値のみを取得して「No.」を削除した結果を表示
@@ -569,14 +562,13 @@ function setReturnButtonEvents() {
             updateDates(bookkey, newBorrowBookflag, newBorrowedDate, newReturnDate);
 
             // ボタンの親要素である .list を削除
-            const listItem = this.closest(".list"); // 一番近い親要素を取得
+            const listItem = this.closest(".item-box"); // 一番近い親要素を取得
             if (listItem) {
                 listItem.remove();
             }
             
             // 本のタイトルを取得して、アラートとログを表示する
-            const bookitemsElement2 = booklistElement.querySelector(".items2")
-            const booktitleElement = bookitemsElement2.querySelector(".BTitle")
+            const booktitleElement = booklistbox.querySelector(".BTitle")
             const bookTitle = booktitleElement.textContent
             console.log(`"${bookTitle}" を返しました！`)
         });
